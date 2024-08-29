@@ -1,4 +1,4 @@
-<div align="center">
+<div aling="center">
   
 # Trabajo 1: Optimizacion Heurística.
 
@@ -8,6 +8,7 @@
 ## Denilson Andrés Molina Truyot
 ## Universidad Nacional de Colombia
 ## Sede Medellín
+
 </div>
 
 ## 1. Optimización de funciones.
@@ -332,7 +333,7 @@ Como se observa anteriormente, solo hay que realizar la configuración a la func
 ```python
 Mejor solución : [ 0.00578883 -0.99397932]
 Valor de la función objetivo = -3.0164792990296845
-Posición de la mejor solución = 0
+Posición de la mejor solución = 84
 ```
 
 Observamos que dicha solución es cercana a la del mínimo global teórico, y utilizando **Figura 4**. Notamos que a partir de la generación 85, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
@@ -347,7 +348,7 @@ Además, la siguiente animación dada por **Figura 5** muestra el movimiento de 
 
 <img src="images/gP2D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price" width="500" />
 
-#### 1.3.3. 3 Dimensiones.
+#### 1.3.2. 3 Dimensiones.
 
 La función Goldstein-Prince solo está definida para 2 dimensiones. Sin embargo, se realizó una extrapolación que respetara el comportamiento de la definición original, obteniendo así la siguiente regla:
 
@@ -365,7 +366,7 @@ Al igual que en la definición anterior. Dado el grado alto de polinomio de la e
 
 Con lo anterior, observamos que para valores cercanos a *(x1,x2,x3)=(-2,2,Z)*, la función tendrá a valores por encima de 400 mil, lo que indica que, para valores por fuera del dominio usual, tendrá a infinito. Por lo que, para el análisis nos conentraremos en aquel dominio. Además, como en la definición original de la función, dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. 
 
-##### 1.3.1.1. Gradiente Numérico.
+##### 1.3.2.1. Gradiente Numérico.
 
 Dado la implementación explicada en el item **1.1.** se procederá a realizar la optimización utilizando la dirección opuesta del gradiente, teniendo presente los siguientes parámetros y utilizando una condición aleatoria en el vector inicial *x0*, siendo un vector con valores entre -1 y 1, de 3 componentes.
 
@@ -398,26 +399,7 @@ X = [-0.17074906 -0.12879312 -0.90368742], f = 103.98516628947469
 iteracion 2000/10000
 X = [-0.16300368 -0.12489504 -0.89678545], f = 91.68966702326823
 
-iteracion 3000/10000
-X = [-0.15610768 -0.12138057 -0.89063403], f = 81.9053681332583
-
-iteracion 4000/10000
-X = [-0.14993363 -0.1182198  -0.88512649], f = 74.05392509624072
-
-iteracion 5000/10000
-X = [-0.14437878 -0.115384   -0.88017581], f = 67.70773246816209
-
-iteracion 6000/10000
-X = [-0.13935911 -0.11284608 -0.87571007], f = 62.545441762639435
-
-iteracion 7000/10000
-X = [-0.13480511 -0.11058079 -0.87166912], f = 58.322211579437536
-
-iteracion 8000/10000
-X = [-0.13065865 -0.10856478 -0.8680022 ], f = 54.84929023960363
-
-iteracion 9000/10000
-X = [-0.1268707  -0.10677657 -0.86466609], f = 51.979689026129655
+...
 
 iteracion 10000/10000
 X = [-0.12339956 -0.10519644 -0.86162372], f = 49.59793438965125
@@ -486,7 +468,7 @@ X = [ 0.11314742 -0.92960634 -0.16348629], f = 0.6368436882812986
 <img src="images/figOptimoGDgp3d.png">
 
 
-##### 1.3.1.2. Algoritmos genéricos.
+##### 1.3.2.2. Algoritmos genéricos.
 
 Teniendo presente la implementación en **1.2.** dejando los parámetros iniciales presentes, se realizó la siguiente implementación para poder crear la instancia que nos otorgue las soluciones.
 
@@ -512,7 +494,7 @@ Como se observa anteriormente, solo hay que realizar la configuración a la func
 ```python
 Mejor solución : [-0.00412632 -0.99335872 -0.17527493]
 Valor de la función objetivo = 0.11322845156583856
-Posición de la mejor solución = 0
+Posición de la mejor solución = 9
 ```
 
 Observamos que dicha solución es cercana a la del mínimo global teórico, y utilizando **Figura 9**. Notamos que a partir de la generación 10, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
@@ -529,7 +511,286 @@ Además, la siguiente animación dada por **Figura 10** muestra el movimiento de
 
 
 
-### Conclusiones.
+### 1.4. Funcion Griewank.
+
+#### 1.4.1. 2 Dimensiones.
+
+La definición formal de la función Griewank está dada por la siguiente regla (Surjanovic & Bingham, n.d.).
+
+<img src="images/equationGriewank.png">
+
+Donde *n* representa la dimensión a tratar. Notemos que dicha productoria es la que convierte a esta función en un benchmark en la optimización global y en problemas de optimización de alto dimensionalidad debido a la generación de mínimos globales. Además, la contribución del término oscilante disminuye cuando la dimensión *n* aumenta, haciendo que el término cuadrático domine el comportamiento global de la función en esas circunstancias.
+
+El dominio de la función suele tratarse en *xi* en *[600,600]* con *i=1,2,...,n* y posee un mínimo global en el origen, con un valor de la función de 0. Esto se puede observar en el gráfico de contorno de **Figura 11**.
+
+<div aling="center">
+
+**Figura 11. Gráfico de contorno de la función Griewank.**
+
+<img src="images/figContornoGriewank2d.png">
+
+</div>
+
+Notemos que los valores azules indican mínimos y los rojos máximos, por lo que, dado el punto inicial de nuestro método de optimización, dicho valor puede inclinarse a cualquiera de los mínimos que están presentes. Esto se puede observar de una mejor manera en **Figura 12** donde se muestra su superficie.
+
+<div aling="center">
+
+**Figura 12. Superficie de la función Griewank.**
+
+<img src="images/figSuperficieGriewank2d.png">
+
+</div>
+
+##### 1.4.1.1. Gradiente Numérico.
+
+Dado la implementación explicada en el item **1.1.** se procederá a realizar la optimización utilizando la dirección opuesta del gradiente, teniendo presente los siguientes parámetros y una condición aleatoria en *x0* que genera un vector de 2 dimensiones con valores de sus componentes entre *[-4.5,4.5]*.
+
+```python
+def griewank_f(X):
+    #print(X)
+    #Para la sumatoria
+    fx1 = [(t**2)/(4000) for t in X]
+    fx1 = np.array(fx1,dtype=object).sum()
+
+    # Para la productoria
+
+    # Resultados con varios componentes
+    fx2=1
+    #Dimension de X
+    d=len(X)
+    # Por cada compontente
+    for i in range(0,d):
+        # Obtengo la i-esima componente del vector X
+        xi=X[i]
+        # Calculo la productoria
+        fx2=fx2*np.cos((xi)/(np.sqrt(i+1)))
+
+    # Uno los terminos como lo dicta la definicion de la funcion
+    return fx1 - fx2 + 1
+
+
+# Condicion aleatoria
+x0 = gen_rand_X(a=-4.5,b=4.5,N=1,dim=2)[0]
+
+# Optimización numérica con gradiente numérico:
+sol_ndim_num, f_obj__ndim_num, k_ndim_num = mi_optimizador_num_dif_ndim(x0 = x0,
+                                                                        g=griewank_f,
+                                                                        lr = 0.001,
+                                                                        tol = 0.00000001,
+                                                                        max_iter=10000,
+                                                                        monitorCada=1000)
+
+```
+Obteniendo así los siguientes resultados por consola:
+
+```python
+x0=[2.72666176 1.19411277]
+
+iteracion 1000/10000
+X = [2.46016813 1.70132522], f = 1.2814849569343612
+
+
+iteracion 1000/10000
+X = [ 0.09264418 -1.07035843], f = 10.151353272133916
+
+...
+
+iteracion 10000/10000
+X = [3.13832654 4.37048752], f = 0.008552878518890639
+
+```
+
+Observamos que la imagen de la función con valor de 0, se puede obtener en varios puntos. Utilizando los puntos iniciales *x0=[2.72666176 1.19411277], x0=[ 1.8245442  -2.37336047] y x0=[-2.85940711  0.9352097 ]*, se llegan a 3 mínimos locales distintos. Esto se observa en **Figura 13, Figura 14 y Figura 15** respectivamente, donde se muestra el trazo y dirección de cada punto partiendo desde su respectivo *x0* marcado con azul, hasta el mínimo local marcado con rojo.
+
+| **Fig 13.** x0=[2.72666176 1.19411277]  | **Fig 14.** x0=[ 1.8245442  -2.37336047] | **Fig 15.** x0=[-2.85940711  0.9352097] |
+|---------------------------------------|---------------------------------------|---------------------------------------|
+| <img src="images/figOptimoGriewank2D1.png" width="300"> | <img src="images/figOptimoGriewank2D2.png" width="300"> | <img src="images/figOptimoGriewank2D3.png" width="300"> |
+
+##### 1.4.1.2. Algoritmos genéricos.
+
+Teniendo presente la implementación en **1.2.** dejando los parámetros iniciales presentes, se realizó la siguiente implementación para poder crear la instancia que nos otorgue las soluciones.
+
+```python
+def griewank_f(X):
+    #print(X)
+    #Para la sumatoria
+    fx1 = [(t**2)/(4000) for t in X]
+    fx1 = np.array(fx1,dtype=object).sum()
+
+    # Para la productoria
+
+    # Resultados con varios componentes
+    fx2=1
+    #Dimension de X
+    d=len(X)
+    # Por cada compontente
+    for i in range(0,d):
+        # Obtengo la i-esima componente del vector X
+        xi=X[i]
+        # Calculo la productoria
+        fx2=fx2*np.cos((xi)/(np.sqrt(i+1)))
+
+    # Uno los terminos como lo dicta la definicion de la funcion
+    return fx1 - fx2 + 1
+
+
+def mi_f_fitness(ga_instance,solution,solution_idx):
+  y = -griewank_f(solution)
+  #print(solution)
+  return(y)
+```
+
+Como se observa anteriormente, solo hay que realizar la configuración a la función de interés, colocandolo de manera negativa, ya que, este algoritmo busca maximizar. Obteniendo así, los siguientes resultados con 200 generaciones.
+
+```python
+Mejor solución : [-0.00974466  0.00185593]
+Valor de la función objetivo = -4.8364515093601845e-05
+Posición de la mejor solución = 1524
+```
+
+Observamos que dicha solución es aproximadamente igua a la del mínimo global teórico, y utilizando **Figura 16**. Notamos que a partir de la generación 152, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
+
+**Figura 16. Valor de la función -f(x) por cada generación.**
+
+<img src="images/figOptimoPygadgriewank2d.png">
+
+Además, la siguiente animación dada por **Figura 17** muestra el movimiento de particulas y su evolución en cada una de las iteraciones, mostrando que a partir de la mutación aleatoria, terminó convergiendo en el valor óptimo de la función, y desde ahí, fue oscilando en dicho resultado.
+
+**Figura 17. Generaciones encontrando el valor óptimo de la función Griewank**
+
+<img src="images/griewalk2D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Griewank" width="500" />
+
+#### 1.4.2. 3 Dimensiones.
+
+La definición de la función de Griewank permite realizar el ejercicio hasta para un *n* arbitrario de dimensiones, por lo que en 3 dimensiones, las proyecciones de la función serían parecidas a las que se muestran en 2. Esto se puede observar en **Figura 18** donde se observan dichas proyecciones en 2D y 3D con un valor de Z fijo.
+
+<div aling="center">
+
+**Figura 18. Proyección de las curvas de nivel y de la superficie dado un valor fijo en Z.**
+
+<img src="images/figCurvaNivelGriewank3D.png">
+
+</div>
+
+Con lo anterior observamos que se sigue manteniendo la generación mínimos globales, y que, a alta dimensionalidad, este puede afectar las funciones de optimización que se utilicen. El mínimo valor global de la función sigue siendo 0 que se encuentra en el origen.
+
+##### 1.4.2.1. Gradiente Numérico.
+
+Dado la implementación explicada en el item **1.1.** se procederá a realizar la optimización utilizando la dirección opuesta del gradiente, teniendo presente los siguientes parámetros y utilizando una condición aleatoria en el vector inicial *x0*, siendo un vector con valores entre -1 y 1, de 3 componentes.
+
+```python
+def griewank_f(X):
+    #print(X)
+    #Para la sumatoria
+    fx1 = [(t**2)/(4000) for t in X]
+    fx1 = np.array(fx1,dtype=object).sum()
+
+    # Para la productoria
+
+    # Resultados con varios componentes
+    fx2=1
+    #Dimension de X
+    d=len(X)
+    # Por cada compontente
+    for i in range(0,d):
+        # Obtengo la i-esima componente del vector X
+        xi=X[i]
+        # Calculo la productoria
+        fx2=fx2*np.cos((xi)/(np.sqrt(i+1)))
+
+    # Uno los terminos como lo dicta la definicion de la funcion
+    return fx1 - fx2 + 1
+
+# Condicion aleatoria
+x0 = gen_rand_X(a=-4.5,b=4.5,N=1,dim=3)[0]
+
+# Optimización numérica con gradiente numérico:
+sol_ndim_num, f_obj__ndim_num, k_ndim_num = mi_optimizador_num_dif_ndim(x0 = x0,
+                                                                        g=griewank_f,
+                                                                        lr = 0.001,
+                                                                        tol = 0.00000001,
+                                                                        max_iter=10000,
+                                                                        monitorCada=1000)
+
+```
+Obteniendo así los siguientes resultados por consola:
+
+```python
+iteracion 1000/10000
+X = [ 0.11481375 -3.1524121  -0.8224104 ], f = 1.543167444522127
+
+...
+
+iteracion 10000/10000
+X = [ 0.00074553 -0.09031732 -0.14768457], f = 0.0056718939851228
+```
+
+Notemos que, en este caso, con la condición inicial aleatoria, llegó a una aproximación del mínimo global. Además, al tener mayor dimensionalidad, este va a requerir mayor número de iteraciones para alcanzar la convergencia de los valores de x. Además, para este caso, se mostrará la proyección en 3D (Ya que es la única forma de mostrar x,y,z,f(x,y,z)) para observar como los puntos se acercan a un mínimo en 4 dimensiones. En este caso, solo se muestra el movimiento de *x1* y *x2*, por lo que, sin la información de *x3*, el gráfico mostrado no es exacto. Con lo anterior, se observa en **Figura 19, Figura 20 y Figura 21** respectivamente, donde se muestra el trazo y dirección de cada punto partiendo desde su respectivo *x0* marcado con azul, hasta el mínimo local marcado con rojo y cómo este varía dado el punto inicial, como lo hacía la función con dominio en *R2*.
+
+| **Fig 19.** x0=[-0.574, -1.026, 0.890]  | **Fig 20.** x0=[ 4.223, -1.287, 2.263] | **Fig 21.** x0=[-2.695, -4.262, 2.637 ] |
+|---------------------------------------|---------------------------------------|---------------------------------------|
+| <img src="images/figOptimoGriewank3D1.png" width="300"> | <img src="images/figOptimoGriewank3D2.png" width="300"> | <img src="images/figOptimoGriewank3D3.png" width="300"> |
+
+##### 1.4.2.2. Algoritmos genéricos.
+
+Teniendo presente la implementación en **1.2.** dejando los parámetros iniciales presentes, se realizó la siguiente implementación para poder crear la instancia que nos otorgue las soluciones.
+
+```python
+def griewank_f(X):
+    #print(X)
+    #Para la sumatoria
+    fx1 = [(t**2)/(4000) for t in X]
+    fx1 = np.array(fx1,dtype=object).sum()
+
+    # Para la productoria
+
+    # Resultados con varios componentes
+    fx2=1
+    #Dimension de X
+    d=len(X)
+    # Por cada compontente
+    for i in range(0,d):
+        # Obtengo la i-esima componente del vector X
+        xi=X[i]
+        # Calculo la productoria
+        fx2=fx2*np.cos((xi)/(np.sqrt(i+1)))
+
+    # Uno los terminos como lo dicta la definicion de la funcion
+    return fx1 - fx2 + 1
+
+# Condicion aleatoria
+x0 = gen_rand_X(a=-4.5,b=4.5,N=1,dim=3)[0]
+
+def mi_f_fitness(ga_instance,solution,solution_idx):
+  y = -griewank_f(solution)
+  #print(solution)
+  return(y)
+
+num_genes = 3
+```
+Como se observa anteriormente, solo hay que realizar la configuración a la función de interés, colocandolo de manera negativa, ya que, este algoritmo busca maximizar y se cambiaron los números de genes a 3, ya que este indica la cantidad de  variables a tratar. Obteniendo así, los siguientes resultados con 200 generaciones.
+
+```python
+Mejor solución : [ 0.00287773 -0.00132641  0.00168141]
+Valor de la función objetivo = -5.054909763768656e-06
+Posición de la mejor solución = 1556
+```
+
+Observamos que dicha solución es cercana a la del mínimo global teórico, y utilizando **Figura 22**. Notamos que a partir de la generación 10, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
+
+**Figura 22. Valor de la función -f(x) por cada generación.**
+
+<img src="images/figOptimoPygadgriewank3d.png">
+
+Además, la siguiente animación dada por **Figura 23** muestra el movimiento de particulas y su evolución en cada una de las iteraciones en una proyección al plano, ya que en la proyección en la superficie no se alcanzan a ver el movimiento de los puntos, mostrando que a partir de la mutación aleatoria, terminó convergiendo en el valor óptimo de la función, y desde ahí, fue oscilando en dicho resultado.
+
+**Figura 23. Generaciones encontrando el valor óptimo de la función Griewank proyectado en el plano con x1 y x2.**
+
+<img src="images/griewalk3D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price" width="500" />
+
+
+
+### 1.5. Conclusiones.
 
 
 ## Referencias.
@@ -545,3 +806,5 @@ Además, la siguiente animación dada por **Figura 10** muestra el movimiento de
 * Towards Data Science. (2020). Introduction to Genetic Algorithms — Including Example Code. Recuperado de https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3.
 
 * Geeks for Geeks. (2022). Introduction to Genetic Algorithm. Recuperado de https://www.geeksforgeeks.org/introduction-to-genetic-algorithm/.
+
+* Surjanovic, S., & Bingham, D. (n.d.). Griewank Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/griewank.html
