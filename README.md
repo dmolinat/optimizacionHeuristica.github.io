@@ -1,3 +1,5 @@
+<div align="center">
+  
 # Trabajo 1: Optimizacion Heurística.
 
 ## Redes neuronales y algorítmos bio-inspirados.
@@ -9,6 +11,8 @@
 ## Universidad Nacional de Colombia
 
 ## Sede Medellín
+
+</div>
 
 ## 1. Optimización de funciones.
 
