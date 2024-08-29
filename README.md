@@ -10,7 +10,7 @@
 ## Sede Medellín
 </div>
 
-
-
 ## Optimización de funciones.
 
+
+Este es un texto en Arial de 12 puntos y alineado a la izquierda.
