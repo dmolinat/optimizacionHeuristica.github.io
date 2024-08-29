@@ -1,4 +1,4 @@
-<center>
+<div align="center">
   
 # Trabajo 1: Optimizacion Heurística.
 
@@ -8,11 +8,9 @@
 ## Denilson Andrés Molina Truyot
 ## Universidad Nacional de Colombia
 ## Sede Medellín
-
-</center>
+</div>
 
 
 
 ## Optimización de funciones.
 
-Solución del trabajo 1 de Redes Neuronales y Algoritmos Bioinspirados 2024-1S. Universidad Nacional de Colombia.
