@@ -200,7 +200,7 @@ print("Posición de la mejor solución = {solution_idx}".format(solution_idx=ga_
 
 ### 1.3. Función Goldstein-Price 
 
-#### 2 Dimensiones.
+#### 1.3.1. 2 Dimensiones.
 
 La definición formal de la función Goldstein-Prince está dada por la siguiente regla (Surjanovic & Bingham, n.d.).
 
@@ -220,7 +220,7 @@ De manera teórica, el mínimo global de la función está en *(x1',x_2')*=(0,-1
 
 Con lo anterior, observamos que para valores cercanos a *(x1,x2)=(-2,2)*, la función tendrá a valores por encima de 400 mil, lo que indica que, para valores por fuera del dominio usual, tendrá a infinito. Por lo que, para el análisis nos conentraremos en aquel dominio.
 
-Dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. En **Figura 2** se observa la curva de nivel cercana a dicho punto global, en otras aproximaciones, se observará como varía dicha curva dependiendo del punto de enfoque
+Dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. En **Figura 2** se observa la curva de nivel cercana a dicho punto global, en otras aproximaciones, se observará como varía dicha curva dependiendo del punto de enfoque.
 
 <div aling="center">
 
@@ -229,6 +229,125 @@ Dependiendo donde se realice el gráfico, esta función presenta varios mínimo 
 <img src="images/figCurvaNivelGP2d.png">
 
 </div>
+
+##### 1.3.1.1. Gradiente Numérico.
+
+Dado la implementación explicada en el item **1.1.** se procederá a realizar la optimización utilizando la dirección opuesta del gradiente, teniendo presente los siguientes parámetros.
+
+```python
+def goldstein_price_f(X):
+    # Solo 2 dimensiones
+    x1=X[0]
+    x2=X[1]
+    return (1+((x1+x2+1)**2)*(19-14*x1+3*x1**2-14*x2+6*x1*x2+3*x2**2))*(30+((2*x1-3*x2)**2)*(18-32*x1+12*x1**2+48*x2-36*x1*x2+27*x2**2))
+
+# Optimización numérica con gradiente numérico:
+sol_ndim_num, f_obj__ndim_num, k_ndim_num = mi_optimizador_num_dif_ndim(x0 = np.array([0.5,-1.5]), 
+                                                                        g=goldstein_price_f, 
+                                                                        lr = 0.000001, 
+                                                                        tol = 0.00000001,
+                                                                        max_iter=10000,
+                                                                        monitorCada=1000)
+```
+Obteniendo así los siguientes resultados por consola:
+
+```python
+iteracion 1000/10000
+X = [ 0.09264418 -1.07035843], f = 10.151353272133916
+iteracion 2000/10000
+X = [ 0.04085111 -1.0162225 ], f = 3.7358162892233526
+iteracion 3000/10000
+X = [ 0.02238754 -1.00180975], f = 3.1399037183956144
+iteracion 4000/10000
+X = [ 0.01348093 -0.99813898], f = 3.041994253796934
+iteracion 5000/10000
+X = [ 0.00851165 -0.99765461], f = 3.016279812259021
+iteracion 6000/10000
+X = [ 0.00551307 -0.99802723], f = 3.006970738312517
+iteracion 7000/10000
+X = [ 0.00362154 -0.99853062], f = 3.003081223216077
+iteracion 8000/10000
+X = [ 0.00239765 -0.99896144], f = 3.0013744797716635
+iteracion 9000/10000
+X = [ 0.00159426 -0.99928466], f = 3.0006145148858585
+iteracion 10000/10000
+X = [ 0.0010626  -0.99951392], f = 3.0002748253306564
+```
+
+Sin embargo, esta función es sensible al learning rate y al punto inicial, ya que, si se mueven dichos valores por ejemplo a *(1.5,1.5)* que aparentemente está cerca al mínimo global, este más se acerca, ya que en el punto *(1.2,0.8)* hay un mínimo global con valor de la función 840.
+
+```python
+# Optimización numérica con gradiente numérico:
+sol_ndim_num, f_obj__ndim_num, k_ndim_num = mi_optimizador_num_dif_ndim(x0 = np.array([1.5,1.5]), 
+                                                                        g=goldstein_price_f, 
+                                                                        lr = 0.00001, 
+                                                                        tol = 0.00000001,
+                                                                        max_iter=10000,
+                                                                        monitorCada=100)
+
+iteracion 100/10000
+X = [1.22767687 0.81685628], f = 841.1251811810017
+
+iteracion 200/10000
+X = [1.20326774 0.80200464], f = 840.015218389963
+
+iteracion 300/10000
+X = [1.20040442 0.80024828], f = 840.0002322445546
+
+iteracion 400/10000
+X = [1.20005032 0.8000309 ], f = 840.0000035938481
+
+iteracion 500/10000
+X = [1.20000628 0.80000386], f = 840.000000056044
+```
+
+Si se disminuye el learning reate, el número de "saltos" que da el método iterativo será menor, por lo que tardará más en llegar a converger a una solución.
+
+Teniendo presente el valor mínimo global de la función, se puede observar como con la implementación inicial, llega al punto de interés. Esto se puede observar en **Figura 3**.
+
+**Figura 3. Solución óptima de la implementación inicial.**
+
+<img src="images/figOptimoGD2d.png">
+
+##### 1.3.1.2. Algoritmos genéricos.
+
+Teniendo presente la implementación en **1.2.** dejando los parámetros iniciales presentes, se realizó la siguiente implementación para poder crear la instancia que nos otorgue las soluciones.
+
+```python
+# Inicializacion
+def goldstein_price_f(X):
+    # Solo 2 dimensiones
+    x1=X[0]
+    x2=X[1]
+    return (1+((x1+x2+1)**2)*(19-14*x1+3*x1**2-14*x2+6*x1*x2+3*x2**2))*(30+((2*x1-3*x2)**2)*(18-32*x1+12*x1**2+48*x2-36*x1*x2+27*x2**2))
+
+def mi_f_fitness(ga_instance,solution,solution_idx):
+  y = -goldstein_price_f(solution)
+  #print(solution)
+  return(y)
+```
+
+Como se observa anteriormente, solo hay que realizar la configuración a la función de interés, colocandolo de manera negativa, ya que, este algoritmo busca maximizar. Obteniendo así, los siguientes resultados con 200 generaciones.
+
+```python
+Mejor solución : [ 0.00578883 -0.99397932]
+Valor de la función objetivo = -3.0164792990296845
+Posición de la mejor solución = 0
+```
+
+Observamos que dicha solución es cercana a la del mínimo global teórico, y utilizando **Figura 4**. Notamos que a partir de la generación 85, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
+
+**Figura 4. Valor de la función -f(x) por cada generación.**
+
+<img src="images/figOptimoPygadGp2dd.png">
+
+Además, la siguiente animación dada por **Figura 5** muestra el movimiento de particulas y su evolución en cada una de las iteraciones, mostrando que a partir de la mutación aleatoria, terminó convergiendo en el valor óptimo de la función, y desde ahí, fue oscilando en dicho resultado.
+
+**Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price**
+
+<img src="images/gP2D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price" width="500" />
+
+### Conclusiones.
 
 
 ## Referencias.
