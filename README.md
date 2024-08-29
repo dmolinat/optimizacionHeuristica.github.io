@@ -1,5 +1,3 @@
-<div align="center">
-  
 # Trabajo 1: Optimizacion Heurística.
 
 ## Redes neuronales y algorítmos bio-inspirados.
@@ -11,8 +9,6 @@
 ## Universidad Nacional de Colombia
 
 ## Sede Medellín
-
-</div>
 
 ## 1. Optimización de funciones.
 
@@ -125,9 +121,9 @@ Dado el grado alto de polinomio de la expresión anterior, la función anterior 
 
 De manera teórica, el mínimo global de la función está en $(x_1*,x_2*)=(0,-1)$, tal que $f(x_1*,x_2*)=-3$. Dicho valor, es la referencia a la hora de realizar los cálculos posteriores para la optimización de la función. En **figura 1** se puede observar las imagenes de dicha función.
 
-<div aling="center">
-
 **Figura 1. Superficie de la función GoldsteinPrice en su dominio.**
+
+<div aling="center">
 
 <img src="images/figGraficoGoldsteinPrice.png">
 
@@ -137,9 +133,10 @@ Con lo anterior, observamos que para valores cercanos a $(x_1,x_2)=(-2,2)$, la f
 
 Dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. En **Figura 2** se observa la curva de nivel cercana a dicho punto global, en otras aproximaciones, se observará como varía dicha curva dependiendo del punto de enfoque
 
-<div aling="center">
 
 **Figura 2. Curva de nivel enfocada en la ubicación del mínimo global.**
+
+<div aling="center">
 
 <img src="images/figCurvaNivelGP2d.png">
 
