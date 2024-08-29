@@ -347,6 +347,188 @@ Además, la siguiente animación dada por **Figura 5** muestra el movimiento de 
 
 <img src="images/gP2D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price" width="500" />
 
+#### 1.3.3. 3 Dimensiones.
+
+La función Goldstein-Prince solo está definida para 2 dimensiones. Sin embargo, se realizó una extrapolación que respetara el comportamiento de la definición original, obteniendo así la siguiente regla:
+
+<img src="images/equationGp3d.png">
+
+Al igual que en la definición anterior. Dado el grado alto de polinomio de la expresión anterior, la función anterior se suele evaluar con el siguiente dominio: *xi* en *[-2,2]* para todo *i=1,2,3*. De manera teórica, el mínimo global cambió, ahora se encuentra en *(x1'=0,x2'=-1,x3'=-0.2)* con un valor de la función de -0.27 aproximadamente, seguido de un mínimo local dado por *f(0,-1,0)=3*. Esto se puede observar en las proyecciones en 2D y 3D de la función dadas por **Figura 6**.
+
+<div aling="center">
+
+**Figura 6. Proyección de las curvas de nivel y de la superficie dado un valor fijo en Z.**
+
+<img src="images/figProy2D3Dgp.png">
+
+</div>
+
+Con lo anterior, observamos que para valores cercanos a *(x1,x2,x3)=(-2,2,Z)*, la función tendrá a valores por encima de 400 mil, lo que indica que, para valores por fuera del dominio usual, tendrá a infinito. Por lo que, para el análisis nos conentraremos en aquel dominio. Además, como en la definición original de la función, dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. 
+
+##### 1.3.1.1. Gradiente Numérico.
+
+Dado la implementación explicada en el item **1.1.** se procederá a realizar la optimización utilizando la dirección opuesta del gradiente, teniendo presente los siguientes parámetros y utilizando una condición aleatoria en el vector inicial *x0*, siendo un vector con valores entre -1 y 1, de 3 componentes.
+
+```python
+def goldstein_price_3d(X):
+  x1 = X[0]
+  x2 = X[1]
+  x3 = X[2]
+  term1 = 1 + (x1 + x2 + x3 + 1)**2 * (19 - 14*x1 + 3*x1**2 - 14*x2 + 6*x1*x2 + 3*x2**2 - 14*x3 + 6*x2*x3 + 3*x3**2)
+  term2 = 30 + (2*x1 - 3*x2 + x3)**2 * (18 - 32*x1 + 12*x1**2 + 48*x2 - 36*x1*x2 + 27*x2**2 + 12*x3 - 9*x1*x3 + 6*x2*x3 + 9*x3**2)
+  return term1 * term2
+
+# Condicion aleatoria
+x0 = gen_rand_X(a=-1,b=1,N=1,dim=3)[0]
+
+# Optimización numérica con gradiente numérico:
+sol_ndim_num, f_obj__ndim_num, k_ndim_num = mi_optimizador_num_dif_ndim(x0 = x0,
+                                                                        g=goldstein_price_3d,
+                                                                        lr = 0.00000001,
+                                                                        tol = 0.00000001,
+                                                                        max_iter=10000,
+                                                                        monitorCada=1000)
+```
+Obteniendo así los siguientes resultados por consola:
+
+```python
+iteracion 1000/10000
+X = [-0.17074906 -0.12879312 -0.90368742], f = 103.98516628947469
+
+iteracion 2000/10000
+X = [-0.16300368 -0.12489504 -0.89678545], f = 91.68966702326823
+
+iteracion 3000/10000
+X = [-0.15610768 -0.12138057 -0.89063403], f = 81.9053681332583
+
+iteracion 4000/10000
+X = [-0.14993363 -0.1182198  -0.88512649], f = 74.05392509624072
+
+iteracion 5000/10000
+X = [-0.14437878 -0.115384   -0.88017581], f = 67.70773246816209
+
+iteracion 6000/10000
+X = [-0.13935911 -0.11284608 -0.87571007], f = 62.545441762639435
+
+iteracion 7000/10000
+X = [-0.13480511 -0.11058079 -0.87166912], f = 58.322211579437536
+
+iteracion 8000/10000
+X = [-0.13065865 -0.10856478 -0.8680022 ], f = 54.84929023960363
+
+iteracion 9000/10000
+X = [-0.1268707  -0.10677657 -0.86466609], f = 51.979689026129655
+
+iteracion 10000/10000
+X = [-0.12339956 -0.10519644 -0.86162372], f = 49.59793438965125
+```
+
+Notemos que, así como en la definición original de la función, al estar en un punto cercano al mínimo, puede converger a uno de los mínimo globales que tiene en el alrededor, esto se puede observar con la corrida mostrada en **Resultado 1**.
+
+**Resultado 1.**
+```python
+iteracion 1000/10000
+X = [ 0.62202443 -0.53277595 -0.71471597], f = 139.9990680822802
+
+...
+
+iteracion 10000/10000
+X = [ 0.56598544 -0.56798884 -0.73918828], f = 84.31977839410618
+```
+
+Notemos que en estos resultados, requiere un mayor de iteraciones par que logre converger a una solución. Es por eso, que se realizó una prueba con 1 millón de iteraciones mostrando las salidas cada 100 mil corridas, obteniendo lo siguiente en **Resultado 2**.
+
+**Resultado 2.**
+```python
+iteracion 100000/1000000
+X = [ 0.52365312 -0.70045405 -0.81474611], f = 34.58824803147678
+
+...
+
+iteracion 1000000/1000000
+X = [ 0.2834492  -0.76513436 -0.50989112], f = 11.459644808345386
+```
+
+Si se aumenta el learning reate, el número de "saltos" que da el método iterativo será mayor, por lo que tardará menos en llegar a converger a una solución, pero aumenta la probabilidad de obtener una solución cercana a un mínimo global, como se muestra en **Resultado 3**.
+
+**Resultado 3.**
+```python
+iteracion 100/1000
+X = [-1.03670199 -0.50882122  0.54798184], f = 30.00718143736922
+
+...
+
+iteracion 500/1000
+X = [-1.03766867 -0.50941994  0.54708861], f = 30.000000004944017
+```
+
+Lo anterior indica, que dar con el mínimo global dado una condición aleatoria, resulta complejo en temas computaciones y matemáticos por el diseño de este método, ya que, con varias configuraciones en elo hiperparámetros, encuentra o se dirige casi siempre a los mismos mínimos locales, que son los mostrados anteriormente. 
+
+Por otra parte, **Resultado 4** muestra una aproximación a dicho mínimo global, el movimiento de los puntos y su punto inicial, marcado en azul, se muestra en las proyecciones en 3D y 2D, de **Figura 7** y **Figura 8**, respectivamente, donde se observa como en el alrededor de dicho punto, existen varios mínimos locales por dónde el algoritmo tiene la posibilidad de decantarse.
+
+**Resultado 4.**
+```python
+iteracion 100/1000
+X = [ 0.2491825  -0.83791647 -0.06427465], f = 8.317465989732044
+
+...
+
+iteracion 1000/1000
+X = [ 0.11314742 -0.92960634 -0.16348629], f = 0.6368436882812986
+```
+
+**Figura 7. Solución más cercana al óptimo proyectado en una superficie con Z=0.**
+
+<img src="images/figoptimoGD3d.png">
+
+**Figura 8. Solución más cercana al óptimo proyectado en un plano con x1 y x2.**
+
+<img src="images/figOptimoGDgp3d.png">
+
+
+##### 1.3.1.2. Algoritmos genéricos.
+
+Teniendo presente la implementación en **1.2.** dejando los parámetros iniciales presentes, se realizó la siguiente implementación para poder crear la instancia que nos otorgue las soluciones.
+
+```python
+# Inicializacion
+def goldstein_price_3d(X):
+  x1 = X[0]
+  x2 = X[1]
+  x3 = X[2]
+  term1 = 1 + (x1 + x2 + x3 + 1)**2 * (19 - 14*x1 + 3*x1**2 - 14*x2 + 6*x1*x2 + 3*x2**2 - 14*x3 + 6*x2*x3 + 3*x3**2)
+  term2 = 30 + (2*x1 - 3*x2 + x3)**2 * (18 - 32*x1 + 12*x1**2 + 48*x2 - 36*x1*x2 + 27*x2**2 + 12*x3 - 9*x1*x3 + 6*x2*x3 + 9*x3**2)
+  return term1 * term2
+
+def mi_f_fitness(ga_instance,solution,solution_idx):
+  y = -goldstein_price_3d(solution)
+  #print(solution)
+  return(y)
+
+num_genes = 3
+```
+Como se observa anteriormente, solo hay que realizar la configuración a la función de interés, colocandolo de manera negativa, ya que, este algoritmo busca maximizar y se cambiaron los números de genes a 3, ya que este indica la cantidad de  variables a tratar. Obteniendo así, los siguientes resultados con 200 generaciones.
+
+```python
+Mejor solución : [-0.00412632 -0.99335872 -0.17527493]
+Valor de la función objetivo = 0.11322845156583856
+Posición de la mejor solución = 0
+```
+
+Observamos que dicha solución es cercana a la del mínimo global teórico, y utilizando **Figura 9**. Notamos que a partir de la generación 10, el valor de la función tuvo un salto hacia dicho mínimo, logrando converger y oscilar entre dicho resultado.
+
+**Figura 9. Valor de la función -f(x) por cada generación.**
+
+<img src="images/figPygadGp3d.png">
+
+Además, la siguiente animación dada por **Figura 10** muestra el movimiento de particulas y su evolución en cada una de las iteraciones en una proyección al plano, ya que en la proyección en la superficie no se alcanzan a ver el movimiento de los puntos, mostrando que a partir de la mutación aleatoria, terminó convergiendo en el valor óptimo de la función, y desde ahí, fue oscilando en dicho resultado.
+
+**Figura 10. Generaciones encontrando el valor óptimo de la función Goldstein-Price proyectado en el plano con x1 y x2.**
+
+<img src="images/gP3D.gif" alt="Figura 5. Generaciones encontrando el valor óptimo de la función Goldstein-Price" width="500" />
+
+
+
 ### Conclusiones.
 
 
