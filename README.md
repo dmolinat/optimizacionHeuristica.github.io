@@ -3,15 +3,11 @@
 # Trabajo 1: Optimizacion Heurística.
 
 ## Redes neuronales y algorítmos bio-inspirados.
-
 ## 2024-2   
 
 ## Denilson Andrés Molina Truyot
-
 ## Universidad Nacional de Colombia
-
 ## Sede Medellín
-
 </div>
 
 ## 1. Optimización de funciones.
@@ -33,9 +29,9 @@ def gen_rand_X(a,b,N=1,dim=2):
   return np.random.uniform(a, b, size=(N, dim))
 ```
 
-Siendo *N* el numero de vectores a generar y *dim*, el número de componentes de cada vector en un dominio $[a,b]$.
+Siendo *N* el numero de vectores a generar y *dim*, el número de componentes de cada vector en un dominio [a,b].
 
-#### 1.1.2. Calcular gradiente $\nabla$ $f$ $(\textbf{x})$.
+#### 1.1.2. Calcular gradiente.
 
 Dicho vector, contiene todas las derivadas parciales de cada variable. En este caso se implementa basado en un código reciclado del cuaderno (Zapata & Ospina, 2024).
 
@@ -56,11 +52,11 @@ def grad_num(x0,f,h=0.00001):
 
 #### 1.1.3. Definición de iteraciones.
 
-Los vectores que se acercan a una solución óptima se actualizan moviéndose en la dirección opuesta al gradiente. La magnitud del movimiento está determinada por un factor llamado tasa de aprendizaje $\alpha$ que es un hiper-parámetro dado antes de realizar el proceso iterativo (Bishop, 2006, p. 45).
+Los vectores que se acercan a una solución óptima se actualizan moviéndose en la dirección opuesta al gradiente. La magnitud del movimiento está determinada por un factor llamado tasa de aprendizaje alpha que es un hiper-parámetro dado antes de realizar el proceso iterativo (Bishop, 2006, p. 45).
 
 <div aling = "center">
 
-$\textbf{x}_{k+1}$ = $\textbf{x}_{k} - \alpha $ $\nabla$ $f$ $(\textbf{x}_{k})$
+<img src="images/equationGD.png">
 
 </div>
 
@@ -113,34 +109,122 @@ def mi_optimizador_num_dif_ndim(x0, g, lr=0.000001, tol=1e-10, max_iter=10000, h
     return solucion, valor_obj, k
 ```
 
-### Función Goldstein-Price 
+### 1.2. Optimización por algorítmos genéticos.
+
+Los algoritmos genéticos son una técnica de optimización motivada en los principios de la evolución biológica, por ejemplo: La selección natural, el cruce (crossover), la mutación, entre otras más (Geeks for Geeks, 2022).
+
+Para realizar la implementación de esta idea, nos apoyaremos en la implementación que realiza la librería PyGad de este tipo de algoritmos, siguiendo los siguientes parámetros y carcaterísticas (Towards Data Science, 2020). Además del reciclado de algunos código del cuaderno anteriormente mencionado (Zapata & Opsina, 2024).
+
+#### 1.2.1. Población inicial.
+
+Definición de un conjunto de soluciones candidatas generadas aleatoriamente. Cada individuo en la población representa una posible solución al problema. Esto se relaciona con los siguientes parámetros que luego se implementará en una instancia de PyGad.
+
+```python
+
+init_range_low = -10.0
+init_range_high = 10.0
+
+```
+
+#### 1.2.2. Evaluación por función fitness.
+
+Cada individuo en la población se evalúa utilizando una función de aptitud para determinar qué tan buena es la solución. En nuestro caso, como se desea minimizar la función, la función fitness serán los valores negativos de su definición original, esto es, porque estos algoritmos buscan en esencia maximizar.
+
+```python
+def mi_f_fitness(ga_instance, solution, solution_idx):
+    y = -f(solution)
+    return y
+```
+
+#### 1.2.3. Selección.
+
+Con base en su aptitud (Valor de la función fitness) se seleccionan individuos de la población actual para ser padres. Los individuos de la nueva generación reemplazan a los de la generación anterior. Además, la forma en que se realiza el reemplazo puede variar, con el tipo de selección "sss", el reemplazo se realiza de manera que algunos padres se mantienen.
+
+```python
+parent_selection_type = "sss"
+keep_parents = 1
+```
+
+#### 1.2.4. Cruce.
+
+El cruce simulando la recombinación genética, combina pares de padres para crear nuevos individuos. En este caso se implementa el tipo de cruce "single_point" (cruce de un solo punto), que toma un punto en el cromosoma y mezcla las partes de los padres para crear hijos.
+
+```python
+crossover_type = "single_point"
+```
+
+#### 1.2.5. Mutación.
+
+La mutación otorga variabilidad a los individuos del problema al modificar aleatoriamente algunos genes, ayudando a explorar nuevas áreas del espacio de búsqueda.
+
+```python
+mutation_type = "random"
+mutation_percent_genes = 10
+```
+
+Además de lo anterior, el algoritmo posee un número fijo de generaciones (iteraciones).
+```python
+num_generations = 50
+```
+
+#### 1.2.6. Creación de la instancia.
+
+Dicha instancia, por la definición de parámetros, termina creando un objeto que está listo para correr y así, otorgar un conjunto de soluciones y valores de la función que logren minimizar la función.
+
+```python
+ga_instancia = pygad.GA(num_generations=num_generations,
+                       num_parents_mating=num_parents_mating,
+                       fitness_func=fitness_function,
+                       sol_per_pop=sol_per_pop,
+                       num_genes=num_genes,
+                       init_range_low=init_range_low,
+                       init_range_high=init_range_high,
+                       gene_space = {'low': -1.0, 'high': 1.0},
+                       parent_selection_type=parent_selection_type,
+                       keep_parents=keep_parents,
+                       crossover_type=crossover_type,
+                       mutation_type=mutation_type,
+                       mutation_percent_genes=mutation_percent_genes,
+                       save_solutions=True)
+ga_instancia.run()
+```
+
+Obteniendo la mejor solución con `ga_instancia.best_solution()`: 
+
+```python
+solution, solution_fitness, solution_idx = ga_instancia.best_solution()
+print("Mejor solución : {solution}".format(solution=solution))
+print("Valor de la función objetivo = {solution_fitness}".format(solution_fitness=solution_fitness))
+print("Posición de la mejor solución = {solution_idx}".format(solution_idx=ga_instancia.solutions_fitness.index(solution_fitness)))
+```
+
+### 1.3. Función Goldstein-Price 
 
 #### 2 Dimensiones.
 
 La definición formal de la función Goldstein-Prince está dada por la siguiente regla (Surjanovic & Bingham, n.d.).
 
-$f(\textbf{x})$ = $(1+(x_1+x_2+1)^{2}(19-14x_1+3x_1^{2}+6x_1x_2+3x_2^{2}))$ $(30+(2x_1-3x_2)^{2}(18-32x_1+12x_1^{2}+48x_2-36x_1x_2+27x_2^{2}))$
+<img src="images/equationGp2d.png">
 
-Dado el grado alto de polinomio de la expresión anterior, la función anterior se suele evaluar con el siguiente dominio: $x_i \in [-2,2]$ para todo $i=1,2$.
+Dado el grado alto de polinomio de la expresión anterior, la función anterior se suele evaluar con el siguiente dominio: *xi* en *[-2,2]* para todo *i=1,2*.
 
-De manera teórica, el mínimo global de la función está en $(x_1*,x_2*)=(0,-1)$, tal que $f(x_1*,x_2*)=-3$. Dicho valor, es la referencia a la hora de realizar los cálculos posteriores para la optimización de la función. En **figura 1** se puede observar las imagenes de dicha función.
-
-**Figura 1. Superficie de la función GoldsteinPrice en su dominio.**
+De manera teórica, el mínimo global de la función está en *(x1',x_2')*=(0,-1), tal que *f(x1',x2')=-3*. Dicho valor, es la referencia a la hora de realizar los cálculos posteriores para la optimización de la función. En **figura 1** se puede observar las imagenes de dicha función.
 
 <div aling="center">
+
+**Figura 1. Superficie de la función GoldsteinPrice en su dominio.**
 
 <img src="images/figGraficoGoldsteinPrice.png">
 
 </div>
 
-Con lo anterior, observamos que para valores cercanos a $(x_1,x_2)=(-2,2)$, la función tendrá a valores por encima de 400 mil, lo que indica que, para valores por fuera del dominio usual, tendrá a infinito. Por lo que, para el análisis nos conentraremos en aquel dominio.
+Con lo anterior, observamos que para valores cercanos a *(x1,x2)=(-2,2)*, la función tendrá a valores por encima de 400 mil, lo que indica que, para valores por fuera del dominio usual, tendrá a infinito. Por lo que, para el análisis nos conentraremos en aquel dominio.
 
 Dependiendo donde se realice el gráfico, esta función presenta varios mínimo locales para puntos cercanos al del mínimo global. En **Figura 2** se observa la curva de nivel cercana a dicho punto global, en otras aproximaciones, se observará como varía dicha curva dependiendo del punto de enfoque
 
+<div aling="center">
 
 **Figura 2. Curva de nivel enfocada en la ubicación del mínimo global.**
-
-<div aling="center">
 
 <img src="images/figCurvaNivelGP2d.png">
 
@@ -155,4 +239,8 @@ Dependiendo donde se realice el gráfico, esta función presenta varios mínimo 
 
 * Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.
 
-* David, & Juan. (2024). IRNA202401_intro_optim.ipynb [Cuaderno de Python].
+* Zapata, & Ospina. (2024). IRNA202401_intro_optim.ipynb [Cuaderno de Python].
+
+* Towards Data Science. (2020). Introduction to Genetic Algorithms — Including Example Code. Recuperado de https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3.
+
+* Geeks for Geeks. (2022). Introduction to Genetic Algorithm. Recuperado de https://www.geeksforgeeks.org/introduction-to-genetic-algorithm/.
