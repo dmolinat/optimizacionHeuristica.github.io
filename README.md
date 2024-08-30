@@ -1157,36 +1157,20 @@ Por otro lado, para el problema aplicado del viajero, se observa que la colonia 
 
 ## Referencias.
 
-* Surjanovic, S., & Bingham, D. (n.d.). Goldstein-Price Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/goldpr.html.
-
-* Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press.
-
-* Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.
-
-* Zapata, & Ospina. (2024). IRNA202401_intro_optim.ipynb [Cuaderno de Python].
-
-* Towards Data Science. (2020). Introduction to Genetic Algorithms — Including Example Code. Recuperado de https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3.
-
-* Geeks for Geeks. (2022). Introduction to Genetic Algorithm. Recuperado de https://www.geeksforgeeks.org/introduction-to-genetic-algorithm/.
-
-* Surjanovic, S., & Bingham, D. (n.d.). Griewank Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/griewank.html
-
-* Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. https://www.deeplearningbook.org
-
-* Mitchell, M. (1998). An Introduction to Genetic Algorithms. MIT Press.
-
-* Tang, K., Wei, X., Jiang, Y., & Chen, Z. (2023). An adaptive ant colony optimization for solving large-scale traveling salesman problem. Mathematics, 11(21), 4439. https://doi.org/10.3390/math11214439
-
-* Ministerio de Transporte de Colombia. (n.d.). Peajes: Estadísticas de carga en modo terrestre. Plataforma Logística de Carga. Recuperado el 29 de agosto de 2024, de https://plc.mintransporte.gov.co/Estadísticas/Carga-Modo-Terrestre/Peajes
-
-* Ardasa 2000. (n.d.). Volkswagen Golf R: Especificaciones y características. Recuperado el 29 de agosto de 2024, de https://www.ardasa.es/volkswagen-golf-r/#:~:text=Este%20motor%20le%20proporciona%20una,11%2C7%20l%2F100km.
-
-* ConvertLive. (n.d.). Convertidor de litros a galones (EE.UU. líquido). Recuperado el 29 de agosto de 2024, de https://convertlive.com/es/u/convertir/litros/a/galones-los-eeuu-líquido
-
-* Comisión de Regulación de Energía y Gas (CREG). (n.d.). Precios de combustibles líquidos. Recuperado el 29 de agosto de 2024, de https://creg.gov.co/publicaciones/15565/precios-de-combustibles-liquidos/
-
-* Tusalario.org. (n.d.). Salario de vendedores de alimentos en la calle en Colombia. Recuperado el 29 de agosto de 2024, de https://tusalario.org/colombia/carrera/funcion-y-salario/vendedores-de-alimentos-en-la-calle#:~:text=Conozca%20su%20salario,de%20entre%20%24798.424%20y%20%241.191.
-
-* PyGAD. (n.d.). PyGAD: Python Genetic Algorithm and Genetic Programming library. Recuperado el 29 de agosto de 2024, de https://pygad.readthedocs.io/
-
 * Akavall. (n.d.). Ant Colony Optimization [Repositorio de código]. GitHub. Recuperado el 29 de agosto de 2024, de https://github.com/Akavall/AntColonyOptimization
+Ardasa 2000. (n.d.). Volkswagen Golf R: Especificaciones y características. Recuperado el 29 de agosto de 2024, de https://www.ardasa.es/volkswagen-golf-r/#:~:text=Este%20motor%20le%20proporciona%20una,11%2C7%20l%2F100km.
+* Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.
+* Comisión de Regulación de Energía y Gas (CREG). (n.d.). Precios de combustibles líquidos. Recuperado el 29 de agosto de 2024, de https://creg.gov.co/publicaciones/15565/precios-de-combustibles-liquidos/
+* ConvertLive. (n.d.). Convertidor de litros a galones (EE.UU. líquido). Recuperado el 29 de agosto de 2024, de https://convertlive.com/es/u/convertir/litros/a/galones-los-eeuu-líquido
+* Geeks for Geeks. (2022). Introduction to Genetic Algorithm. Recuperado de https://www.geeksforgeeks.org/introduction-to-genetic-algorithm/.
+* Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press.
+* Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. https://www.deeplearningbook.org
+* Mitchell, M. (1998). An Introduction to Genetic Algorithms. MIT Press.
+* Ministerio de Transporte de Colombia. (n.d.). Peajes: Estadísticas de carga en modo terrestre. Plataforma Logística de Carga. Recuperado el 29 de agosto de 2024, de https://plc.mintransporte.gov.co/Estadísticas/Carga-Modo-Terrestre/Peajes
+* PyGAD. (n.d.). PyGAD: Python Genetic Algorithm and Genetic Programming library. Recuperado el 29 de agosto de 2024, de https://pygad.readthedocs.io/
+* Surjanovic, S., & Bingham, D. (n.d.). Goldstein-Price Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/goldpr.html.
+* Surjanovic, S., & Bingham, D. (n.d.). Griewank Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/griewank.html
+* Tang, K., Wei, X., Jiang, Y., & Chen, Z. (2023). An adaptive ant colony optimization for solving large-scale traveling salesman problem. Mathematics, 11(21), 4439. https://doi.org/10.3390/math11214439
+* Towards Data Science. (2020). Introduction to Genetic Algorithms — Including Example Code. Recuperado de https://towardsdatascience.com/introduction-to-genetic-algorithms-including-example-code-e396e98d8bf3.
+* Tusalario.org. (n.d.). Salario de vendedores de alimentos en la calle en Colombia. Recuperado el 29 de agosto de 2024, de https://tusalario.org/colombia/carrera/funcion-y-salario/vendedores-de-alimentos-en-la-calle#:~:text=Conozca%20su%20salario,de%20entre%20%24798.424%20y%20%241.191.
+* Zapata, & Ospina. (2024). IRNA202401_intro_optim.ipynb [Cuaderno de Python].
