@@ -1074,11 +1074,11 @@ Valor de la función objetivo = 3252105.053167045
 Posición de la mejor solución = 2256
 ```
 
-Teniendo presente el conjunto de posibles resultados, es una solución que se relaciona con el acercamiento del mínimo global. En las siguientes animaciones (**Figura 27**, **Figura 28** y **Figura 29**), podemos observar la solución de las dos primeras iteraciones junto con el de la generación óptima, respectivamente.
+Teniendo presente el conjunto de posibles resultados, es una solución que se relaciona con el acercamiento del mínimo global. En las siguientes animaciones (**Figura 27** y **Figura 28**), podemos observar la solución de la primera iteración junto con el de la generación óptima, respectivamente.
 
-| **Fig 27.** Gen 1 | **Fig 28.** Gen 2 | **Fig 29.** Gen óptima |
-|---------------------------------------|---------------------------------------|---------------------------------------|
-| <img src="pygad/animation_pygad_sol1.gif" width="500"> | <img src="pygad/animation_pygad_sol2.gif" width="500"> | <img src="pygad/animation_pygad_sol4.gif" width="500"> |
+| **Fig 27.** Gen 1 | **Fig 28.** Gen óptima |
+|-------------------------------------------------------------|------------------------------------------------------------|
+| <img src="pygad/animation_pygad_sol1.gif" width="750"> | <img src="pygad/animation_pygad_sol4.gif" width="750"> |
 
 ### 2.3. Solución del problema con colonia de hormigas.
 
@@ -1139,19 +1139,19 @@ Salida.
 shorted_path: ([(0, 2), (2, 1), (1, 3), (3, 4), (4, 5), (5, 12), (12, 13), (13, 14), (14, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (11, 0)], 2718004.1279459656)
 ```
 
-Notemos que la solución obtenida, es el mínimo global de costos al realizar esa secuencia de viajes. Dicha solución se obtiene en la iteración 140. Por lo que observamos, para este tipo de problema, este algoritmo como un método efectivo de solución. Además, en **Figuras 30, 31 y 32**, se observa el camino tomado en las dos primeras iteraciones y en la iteración óptima.
+Notemos que la solución obtenida, es el mínimo global de costos al realizar esa secuencia de viajes. Dicha solución se obtiene en la iteración 140. Por lo que observamos, para este tipo de problema, este algoritmo como un método efectivo de solución. Además, en **Figuras 29 y 30**, se observa el camino tomado en las dos primeras iteraciones y en la iteración óptima.
 
-| **Fig 27.** Iter 1 | **Fig 28.** Iter 2 | **Fig 29.** Iter 140 |
-|---------------------------------------|---------------------------------------|---------------------------------------|
-| <img src="coloant/animation_colant_sol1.gif" width="500"> | <img src="coloant/animation_colant_sol2.gif" width="500"> | <img src="coloant/animation_colant_sol4.gif" width="500"> |
+| **Fig 29.** Iter 1 | **Fig 30.** Iter 140 |
+|----------------------------------------------------------|--------------------------------------------------------------|
+| <img src="coloant/animation_colant_sol1.gif" width="750"> | <img src="coloant/animation_colant_sol4.gif" width="750"> | 
 
 ### 2.4. Conclusiones.
 
 En definitiva, la optimización de funciones, dependiendo el problema puede llegar a ser un reto tanto a nivel computacional como a nivel de modelamiento. Para funciones como las mostradas en la primera parte, se observa que una alta dimensionalidad dificultad la obtención de un mínimo global cuando la condicional inicial es aleatoria y que, el método de algoritmos genéticos dado por la librería pyGad, tuvo mejores rendimientos para este tipo de funciones.
 
-Por otro lado, para el problema aplicado del viajero, se observa que la colonia de hormigas es un método más preciso debido a la naturaleza del problema y su semejanza en el comportamiento biológico con estos animales. Sin embargo, no deja de tener una configuración e implementación rígida, lo que reduce la capacidad de resolución de problemas. Para finalizar, se muestra **Figura 30** y **Figura 31** que indican la imagen con la solución y la animación mostrada en **Figura 29** a mayor escala.
+Por otro lado, para el problema aplicado del viajero, se observa que la colonia de hormigas es un método más preciso debido a la naturaleza del problema y su semejanza en el comportamiento biológico con estos animales. Sin embargo, no deja de tener una configuración e implementación rígida, lo que reduce la capacidad de resolución de problemas. Para finalizar, se muestra **Figura 30** y **Figura 31** que indican la imagen con la solución y la animación mostrada en **Figura 30** a mayor escala.
 
-| **Fig 30.** Imagen de solución óptima | **Fig 31.** Animación de solución óptima |
+| **Fig 31.** Imagen de solución óptima | **Fig 32.** Animación de solución óptima |
 |-------------------------------------------------------------|---------------------------------------------------------------|
 | <img src="coloant/solOptima.png" width="700"> | <img src="coloant/animation_colant_sol4.gif" width="700"> | 
 
