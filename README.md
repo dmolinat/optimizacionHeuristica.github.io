@@ -792,12 +792,368 @@ Además, la siguiente animación dada por **Figura 23** muestra el movimiento de
 
 2. Los algoritmos genéticos, al tener más posibilidades tanto de iteraciones como de solución por población suelen tener más coste computacional y en muchos casos, llega a converger a una solución local, esto ocurrió cuando se trabajaron las funciones aplicadas en 3 dimensiones. Sin embargo, la solución que suele dar es aproximadamente global y logra converger en alguna de sus generaciones.
 
-3. Con el learning rate adecuado, el método de descenso por gradiente termina convergiendo así la función no sea suave o convexa, lo que le da cierta flexibilidad. Sin embargo, para problemas donde la condición incial es aleatoria, no se garantiza que converge al mínimo global, esto ocurrió en la apliación mostrada en el item **1.4.1.1.**.
+3. Con el learning rate adecuado, el método de descenso por gradiente termina convergiendo así la función no sea suave o convexa (Goodfellow, I., Bengio, Y., & Courville, A., 2016), lo que le da cierta flexibilidad. Sin embargo, para problemas donde la condición incial es aleatoria, no se garantiza que converge al mínimo global, esto ocurrió en la apliación mostrada en el item **1.4.1.1.**.
 
-4. A pesar de que requiere una mayor configuración y previo estudio, el método de algoritmos genéticos tiene mayor oportunidad para problemas de optimización, ya que con la recombinación, se puede obtener mayores combinaciones por población que logren llegar al resultado de la función objetivo deseado.
+4. A pesar de que requiere una mayor configuración y previo estudio, el método de algoritmos genéticos tiene mayor oportunidad para problemas de optimización (Mitchell, M., 1998), ya que con la recombinación, se puede obtener mayores combinaciones por población que logren llegar al resultado de la función objetivo deseado .
 
 5. En general, los mejores resultados, con menos corridas, iteraciones, aunque con más costo computacional se obtuvieron con los algoritmos genéticos. Sin embargo, desde el punto de vista de la configuración e implementación, el método de descenso de gradiente muestra ser más facil de implementar asegura la convergencia a una solución (no oscila, como en el caso de algoritmos genéticos) aunque esta no sea global.
 
+## 2. Optimización combinatoria.
+
+Para mostrar el problema y la solución de optimización combinatoria, se recordará el problema original del viajero:
+
+Un vendedor necesita planificar su recorrido para visitar un número determinado de ciudades (Tang, K., Wei, X., Jiang, Y., & Chen, Z., 2023). Dado un conjunto de ciudades y las distancias entre cada par de ciudades, el vendedor desea encontrar el camino más corto que le permita: 
+
+1. Visitar cada ciudad exactamente una vez.
+2. Regresar al punto de partida.
+
+En este caso el vendedor debe recorrer las siguientes ciudades:
+
+* Palmira
+* Pasto
+* Tuluá
+* Bogota
+* Pereira
+* Armenia
+* Manizales
+* Valledupar
+* Montería
+* Soledad
+* Cartagena
+* Barranquilla
+* Medellín
+* Bucaramanga
+* Cúcuta
+
+En este caso, no solo importa la distancia, sino que se debe tener en cuenta la siguiente circunstancias, con el fin de **minimizar costos**:
+
+1. Es un vendedor, por lo que tiene un sueldo por hora, por lo que la **duración del viaje** es un factor.
+
+2. Va en un automovil, por lo que por cada **recorrido** hay **gasto de gasolina**.
+
+3. Entre las ciudades hay peajes, por lo que el **costo total de peajes entre dos ciudades**, podría determinar si realizarlo o no.
+
+### 2.1. Diseño del problema.
+
+#### 2.1.1. Peajes, duracion y distancias.
+
+Entre cada uno de los 15 lugares, existe una cantidad variable de peajes, distancias, entre otros factores dados por el Ministerio de Vías o Transporte que pueden afectar dicho viaje. Es por eso, que se tomó una muestra tomando cada uno de los posibles costos, de un lugar A a un lugar B, en términos de gasto total de peajes, duración de viaje y distancia recorrida. Dichos datos fueron tomados de la página del Ministerio de Transporte de Colombia (Ministerio de Transporte de Colombia., n.d.), teniendo en cuenta que el trayecto de ir del lugar A al lugar B, sería el mismo que ir del lugar B al lugar A. 
+
+Por ejemplo: El costo de peajes de ir de Valledupar a Manizales ó Manizales a Valledupar, según dicha página, es de 96600 COP (Pesos colombianos), toma 9 horas y 49 min (minutos), y recorre 855.61 km (kilometros), aproximadamente. Esto se observa en **Figura 24**, **Figura 25** y **Figura 26**, donde se mostrarán los trayectos Manizales a Valledupar, Soledad a Medellin y Palmira a Pasto, respectivamente.
+
+| **Fig 24.** Manizales a Valledupar | **Fig 25.** Soledad a Medellin | **Fig 26.** Palmira a Pasto |
+|---------------------------------------|---------------------------------------|---------------------------------------|
+| <img src="images/valleduManiza.png" width="300"> | <img src="images/soleMedellin.png" width="300"> | <img src="images/palmiPasto.png" width="300"> |
+
+Actualmente, se tienen los datos de los posibles 105 viajes que se pueden realizar entre sí, se puede observar cada imagen el siguiente link: https://github.com/dmolinat/optimizacionHeuristica.github.io/tree/main/images.
+
+#### 2.1.2. Vehiculo y sueldo del vendedor.
+
+El vehiculo a usar, fue una elección arbitraria, por lo que es una constante en el problema. En este caso, es un Volkswagen Golf R, que consume 11.7 L por cada 100 km (Ardasa 2000, n.d.), lo que sería, realizando la conversión a Gal(Galón)/km (ConvertLive. ,n.d.), un valor de 0.030908 Gal/km . Además, el vehiculo consume gasolina corriente, donde, dejando el precio fijo en 15.568 COP/Gal (Comisión de Regulación de Energía y Gas (CREG)., n.d.), deja definido lo que es ser el costo total por km recorrido multiplicado los dos últimos factores.
+
+Luego, el sueldo del vendedor, se interpretó el vendedor como un vendedor ambulante, ya que debe movilizarse hacia los clientes y no tiene un puesto fijo. Por lo que, se tiene el rango de sueldos que se puede obtener con la profesión está entre $798424$ COP a $2373434$ COP por mes - 2024 (Tusalario.org., n.d.). Lo que seria entre *[1108.92,3296.44]* la hora aproximadamente. Es por esto, que se dejará una distribución uniforme en ese rango para el sueldo por hora de este vendedor. Dejando así, inicializadas las constantes.
+
+```python
+# Carro
+GASOLINA_VOLKSWAGEN_GOLF_R=0.030908*15568                 # [Gal/km]*[COP/Gal] = [COP/km]
+HORA_VENDEDOR = random.random()*(3296.44-1108.92)+1108.92 # [COP/h]
+```
+
+
+#### 2.1.3. Función que calcula costo de un lugar A a un lugar B.
+
+Los datos sacados de cada lugar están guardados en un documento ".xlsx", y a través de su acceso, es que se formula una función que calcula el costo total de ir de un lugar A a un lugar B como la suma de: costo total de peajes, costo de gasolina y costo por hora del vendedor (duracion del viaje recorrido por su sueldo por hora). Además, por definición del ejercicio no se puede ir hacia una misma ciudad, por lo que se llevará dicho costo a "infinito" en caso tal reciba esas entradas.
+
+```python
+# Codificar ciudades
+city2Label={"Valledupar": 0,
+       "Soledad": 1,
+       "Barranquilla": 2,
+       "Cartagena": 3,
+       "Monteria": 4,
+       "Medellin": 5,
+       "Tulua": 6,
+       "Palmira": 7,
+       "Pasto": 8,
+       "Bogota": 9,
+       "Bucaramanga": 10,
+       "Cucuta": 11,
+       "Manizales": 12,
+       "Pereira": 13,
+       "Armenia": 14
+             }
+
+label2City={v : k for k , v in city2Label.items()}
+
+def costo_total_entre_ciudades(int_A, int_B):
+    if(int_A==int_B):
+        # Si es la misma ciudad, dara un valor absurdo para que no lo tenga en cuenta para el minimo 
+        return np.inf
+    
+    #Nombre de las ciudades
+    nombre_ciudad_A=label2City[int_A]
+    nombre_ciudad_B=label2City[int_B]
+
+    # Origen
+    #filter_origen=df_trayectos[(df_trayectos["Origen"]==nombre_ciudad_A)]
+    
+    # Destino
+    filter_destino = df_trayectos[(df_trayectos["Origen"]==nombre_ciudad_A) & (df_trayectos["Destino"] == nombre_ciudad_B)]
+
+    # Datos
+    fila=filter_destino.iloc[0]
+
+    peajes=fila["TotalPeaje"]
+    tiempo_viaje=fila["DuracionH"]
+    distancia_viaje=fila["DistanciaKm"]
+    #imgEvidencia=fila["imgEvidencia"]
+
+    # Calculo de costos
+    costo_gasolina=GASOLINA_VOLKSWAGEN_GOLF_R*distancia_viaje
+    #print(f"Gasolina: {costo_gasolina}")
+    costo_hora_vendedor=HORA_VENDEDOR*tiempo_viaje
+
+    total_costo_A_B=peajes+costo_gasolina+costo_hora_vendedor
+
+    return total_costo_A_B   
+```
+
+#### 2.1.4. Mínimo y máximo global.
+
+Antes de utilizar los algoritmos, se decidió estudiar con antelación, cuáles eran los posibles valores mínimos y máximos globales del ejercicio. Para ello, se realizaron ciclos que determinen el mínimo y el máximo en cada caso, desde el punto donde se esté, para que, siempre escoja el camino mínimo o el máximo (depende del caso) en costos y así encontrar los posibles mínimo y máximos. Por lo tanto, dejando el sueldo por hora del vendedor en 3152.25 y corriendo la implementación anteriormente explicada.
+
+```python
+def min_viaje(p):
+    # Lista soluciones
+    l_sol=[p]
+    l_cost=[]
+
+    # Mientras la solucion no contenga todas las ciudades
+    
+    # Ciudad actual
+    city_act=p
+    while(len(l_sol)!=15):
+        # Lista para obtener los valores mas bajos de cada busqueda
+        l_aux_min={}
+
+
+        # Recorriendo todas las posibles opciones
+        for i in range(0,15):
+            # Si la ciudad no es p y no esta en la lista de ciudades
+            if(i!=city_act and (i not in l_sol)):
+                l_aux_min[i]=costo_total_entre_ciudades(city_act,i)
+            
+        # Obtener la ciudad de minimo costo
+        min_vals=min(list(l_aux_min.values()))
+
+        # Obtener la ciudad
+        for k, v in l_aux_min.items():
+            # Si el valor del dict es igual a lminimo
+            if(v==min_vals):
+                #print(city_act,label2City[k])
+                # Guardar la ciudad
+                l_sol.append(k)
+                break
+        # La ciudad actual es la ciudad que se guardo
+        city_act=k
+    return l_sol
+
+
+    def max_viaje(p):
+    # Lista soluciones
+    l_sol=[p]
+
+    # Mientras la solucion no contenga todas las ciudades
+    
+    # Ciudad actual
+    city_act=p
+    while(len(l_sol)!=15):
+        # Lista para obtener los valores mas bajos de cada busqueda
+        l_aux_max={}
+
+
+        # Recorriendo todas las posibles opciones
+        for i in range(0,15):
+            # Si la ciudad no es p y no esta en la lista de ciudades
+            if(i!=city_act and (i not in l_sol)):
+                l_aux_max[i]=costo_total_entre_ciudades(city_act,i)
+            
+        # Obtener la ciudad de minimo costo
+        max_vals=max(list(l_aux_max.values()))
+
+        # Obtener la ciudad
+        for k, v in l_aux_max.items():
+            # Si el valor del dict es igual a lminimo
+            if(v==max_vals):
+                #print(city_act,label2City[k])
+                # Guardar la ciudad
+                l_sol.append(k)
+                break
+        # La ciudad actual es la ciudad que se guardo
+        city_act=k
+    return l_sol
+```
+
+Con dichas funciones, se obtiene el costo máximo o mínimo de empezar en la ciudad i, con *i=0,1,...,15*. Ahora, buscando obtener todas las posibles combinaciones, se obtiene lo siguiente.
+
+```python
+# El minimo de los minimos
+min_mins=[]
+for i in range(0,15):
+    c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15=min_viaje(i)
+    costo=f(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15)
+    min_mins.append(costo)
+    # print(f"Desde {label2City[i]}, el costo minimo es {costo} COP.")
+
+print(f"\nCosto minimo: {min(min_mins)}, empezando en {label2City[min_mins.index(min(min_mins))]}.")
+
+# El minimo de los minimos
+max_maxs=[]
+for i in range(0,15):
+    c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15=max_viaje(i)
+    costo=f(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15)
+    max_maxs.append(costo)
+    # print(f"Desde {label2City[i]}, el costo maximo es {costo} COP.")
+
+print(f"\nCosto maximo: {max(max_maxs)}, empezando en {label2City[max_maxs.index(min(max_maxs))]}.")
+```
+
+```
+Salidas:
+>>> Costo maximo: 9482598.086016081, empezando en Cartagena.
+>>> Costo minimo: 2718004.1279459656, empezando en Valledupar.
+```
+
+Por lo que, con estos valores de referencia, se pueden definir las funciones necesarias para los algoritmos a usar. Se usará el algoritmo genético que se mostró en el item **1.2.** y el algoritmo de colonia de hormigas.
+
+### 2.2. Solución del problema con algoritmo genéticos.
+
+Para encontrar una solución con este tipo de algoritmos, hay que configurar la función fitness, para eso, se realizó una función que enlaza los orígenes y destinos de cada costo, con el fin de cumplir con las reglas del problema del viajero.
+
+```python
+def f(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15):
+    return (costo_total_entre_ciudades(c1,c2)+costo_total_entre_ciudades(c2,c3)+costo_total_entre_ciudades(c3,c4)+
+            costo_total_entre_ciudades(c4,c5)+costo_total_entre_ciudades(c5,c6)+costo_total_entre_ciudades(c6,c7)+
+            costo_total_entre_ciudades(c7,c8)+costo_total_entre_ciudades(c8,c9)+costo_total_entre_ciudades(c9,c10)+
+            costo_total_entre_ciudades(c10,c11)+costo_total_entre_ciudades(c11,c12)+costo_total_entre_ciudades(c12,c13)+
+            costo_total_entre_ciudades(c13,c14)+costo_total_entre_ciudades(c14,c15)+costo_total_entre_ciudades(c15,c1))
+
+def mi_f_fitness(ga_instance,solution,solution_idx):
+  c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15=solution  
+  y = -f(c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15)
+  return(y)
+```
+
+Además, recordemos que dos ciudades no se pueden recorrer sino una vez, para asegurar eso en este tipo de algoritmos, se debe configurar tanto el tipo de recombinación como la generación de la población, ya que la población debe ser generada por permutaciones de valores enteros entre 0 a 14. Esto se puede asegurar, personalizando el parámetro `initial_population` de la siguiente forma. Luego, para que las soluciones por poblaciones no repitan ciudades se puede optar a alguna de los siguientes tipos de recombinaciones o mutaciones que ofrece la librería PyGad (PyGAD., n.d.):
+
+- Swap: Aplica la mutación swap que intercambia los valores de 2 genes seleccionados al azar.
+- Inversion: Aplica la mutación de inversión que selecciona un subconjunto de genes y los invierte.
+- Scramble: Aplica la mutación scramble que selecciona un subconjunto de genes y baraja su orden aleatoriamente.
+- Adaptive: Aplica la mutación adaptativa que selecciona el número/porcentaje de genes a mutar en función de la aptitud de la solución. Si la aptitud es alta (es decir, la calidad de la solución es alta), se muta un número/porcentaje pequeño de genes en comparación con una solución con una aptitud baja asignar.
+
+En este caso, se dejará la configuración con *scramble* ya que, el barajar un conjunto de valores puede permitir una mayor obtención de posibilidades y así acercarse al mínimo, por lo que, es el tipo de mutación que más beneficiaría el ejercicio. Luego, como el número de posibilidades es mayor, se ajustó el número de generaciones a 1000 con 18 soluciones por población, buscando acercarse más a los valores que aseguren el mínimo
+
+```python
+
+num_genes = 15  # Cambia a 15, ya que estás optimizando 15 ciudades
+# Este espacio de genes se usará solo para mutaciones, pero las soluciones serán permutaciones.
+gene_space = {'low': 0, 'high': 14, 'step': 1}
+mutation_type = "scramble"
+
+# Función personalizada para inicializar la población con permutaciones
+def custom_initial_population(pop_size, sol_per_pop, num_genes):
+    return np.array([np.random.permutation(num_genes) for _ in range(sol_per_pop)])
+```
+
+Después de correr la instancia, se obtiene la siguiente solución.
+```
+Salidas: 
+
+Mejor solución : [13.  5. 14.  9. 10. 11.  0.  3.  1.  2.  4. 12.  7.  8.  6.]
+Valor de la función objetivo = 3252105.053167045
+Posición de la mejor solución = 2256
+```
+
+Teniendo presente el conjunto de posibles resultados, es una solución que se relaciona con el acercamiento del mínimo global. En las siguientes animaciones (**Figura 27**, **Figura 28** y **Figura 29**), podemos observar la solución de las dos primeras iteraciones junto con el de la generación óptima, respectivamente.
+
+| **Fig 27.** Gen 1 | **Fig 28.** Gen 2 | **Fig 29.** Gen óptima |
+|---------------------------------------|---------------------------------------|---------------------------------------|
+| <img src="pygad/animation_pygad_sol1.gif" width="500"> | <img src="pygad/animation_pygad_sol2.gif" width="500"> | <img src="pygad/animation_pygad_sol4.gif" width="500"> |
+
+### 2.3. Solución del problema con colonia de hormigas.
+
+Es una técnica inspirada en el comportamiento biológico de las hormigas para encontrar caminos cortos entre dos puntos. Las hormigas reales depositan una sustancia química llamada feromona en su camino. Luego, otras hormigas son atraídas por esta feromona y tienden a seguir los caminos con mayor concentración de ella, lo que lleva a la convergencia hacia rutas más cortas y eficientes (Tang, K., Wei, X., Jiang, Y., & Chen, Z., 2023).
+
+Para la implementación, se usó como base el código que parte de una matriz de distancias para que las hormigas encuentre los puntos más óptimos entre dos caminos, respetando las reglas del problema del viajero (Akavall., n.d.). En este caso, se diseñó una matriz de costos entre los puntos A y B, que representarían las "distancias" para que así, dichas hormigas encuentren el punto óptimo, esto se observa en el siguiente código que generó la matriz de costos entre pares de lugares.
+
+```python
+matriz_costos=[]
+for id, city_name in label2City.items():
+    # Ciudad A
+    city_A=id
+
+    fila_costos_cAB=[]
+    for id_B in range(0,15):
+        # Datos de ciudad B
+        city_B=id_B
+        costo=costo_total_entre_ciudades(city_A,city_B)
+        fila_costos_cAB.append(costo)
+    matriz_costos.append(fila_costos_cAB)
+
+matriz_d=np.array(matriz_costos,dtype=np.float64)
+```
+
+Luego, se inicializa el problema:
+
+1. Se inicia con un grupo de hormigas artificiales que se colocan en diferentes ciudades del problema. donde cada hormiga representa una posible solución, en este caso, se dejó en 20
+
+2. La cantidad de hormigas que pueden generar una solución óptima. En este caso, se dejó en 15, ya que existen muchas posbilidades de lugares y como máximo son 15 ciudades.
+
+3. El % de decaimento de las feromonas al pasar por un punto. Se dejó dicho hiperparámetro por defecto en relación al ejemplo que presenta el creador del código. 
+
+4. Debido a la cantidad de exploraciones que se realizan, se dejaron 155 a 200 iteraciones para alcanzar dicho valor óptimo.
+
+5. Mismo valor de alpha y beta para mantener equilibrado la influencia de las feromonas de positadas en cada camino.
+
+```python
+import numpy as np
+
+from ant_colony import AntColony
+
+distances = matriz_d
+
+ant_colony = AntColony(distances, 
+                       n_ants=20, 
+                       n_best=15, 
+                       n_iterations=155, 
+                       decay=0.95, 
+                       alpha=1, beta=1)
+shortest_path, l_results = ant_colony.run()
+print ("shorted_path: {}".format(shortest_path))
+
+```
+
+```
+Salida.
+
+shorted_path: ([(0, 2), (2, 1), (1, 3), (3, 4), (4, 5), (5, 12), (12, 13), (13, 14), (14, 6), (6, 7), (7, 8), (8, 9), (9, 10), (10, 11), (11, 0)], 2718004.1279459656)
+```
+
+Notemos que la solución obtenida, es el mínimo global de costos al realizar esa secuencia de viajes. Dicha solución se obtiene en la iteración 140. Por lo que observamos, para este tipo de problema, este algoritmo como un método efectivo de solución. Además, en **Figuras 30, 31 y 32**, se observa el camino tomado en las dos primeras iteraciones y en la iteración óptima.
+
+| **Fig 27.** Iter 1 | **Fig 28.** Iter 2 | **Fig 29.** Iter 140 |
+|---------------------------------------|---------------------------------------|---------------------------------------|
+| <img src="coloant/animation_colant_sol1.gif" width="500"> | <img src="coloant/animation_colant_sol2.gif" width="500"> | <img src="coloant/animation_colant_sol4.gif" width="500"> |
+
+### 2.4. Conclusiones.
+
+En definitiva, la optimización de funciones, dependiendo el problema puede llegar a ser un reto tanto a nivel computacional como a nivel de modelamiento. Para funciones como las mostradas en la primera parte, se observa que una alta dimensionalidad dificultad la obtención de un mínimo global cuando la condicional inicial es aleatoria y que, el método de algoritmos genéticos dado por la librería pyGad, tuvo mejores rendimientos para este tipo de funciones.
+
+Por otro lado, para el problema aplicado del viajero, se observa que la colonia de hormigas es un método más preciso debido a la naturaleza del problema y su semejanza en el comportamiento biológico con estos animales. Sin embargo, no deja de tener una configuración e implementación rígida, lo que reduce la capacidad de resolución de problemas. Para finalizar, se muestra **Figura 30** y **Figura 31** que indican la imagen con la solución y la animación mostrada en **Figura 29** a mayor escala.
+
+| **Fig 30.** Imagen de solución óptima | **Fig 31.** Animación de solución óptima |
+|-------------------------------------------------------------|---------------------------------------------------------------|
+| <img src="coloant/solOptima.png" width="700"> | <img src="coloant/animation_colant_sol4.gif" width="700"> | 
 
 ## Referencias.
 
@@ -814,3 +1170,23 @@ Además, la siguiente animación dada por **Figura 23** muestra el movimiento de
 * Geeks for Geeks. (2022). Introduction to Genetic Algorithm. Recuperado de https://www.geeksforgeeks.org/introduction-to-genetic-algorithm/.
 
 * Surjanovic, S., & Bingham, D. (n.d.). Griewank Function. Simon Fraser University. Recuperado el 29 de agosto de 2024, de https://www.sfu.ca/~ssurjano/griewank.html
+
+* Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. https://www.deeplearningbook.org
+
+* Mitchell, M. (1998). An Introduction to Genetic Algorithms. MIT Press.
+
+* Tang, K., Wei, X., Jiang, Y., & Chen, Z. (2023). An adaptive ant colony optimization for solving large-scale traveling salesman problem. Mathematics, 11(21), 4439. https://doi.org/10.3390/math11214439
+
+* Ministerio de Transporte de Colombia. (n.d.). Peajes: Estadísticas de carga en modo terrestre. Plataforma Logística de Carga. Recuperado el 29 de agosto de 2024, de https://plc.mintransporte.gov.co/Estadísticas/Carga-Modo-Terrestre/Peajes
+
+* Ardasa 2000. (n.d.). Volkswagen Golf R: Especificaciones y características. Recuperado el 29 de agosto de 2024, de https://www.ardasa.es/volkswagen-golf-r/#:~:text=Este%20motor%20le%20proporciona%20una,11%2C7%20l%2F100km.
+
+* ConvertLive. (n.d.). Convertidor de litros a galones (EE.UU. líquido). Recuperado el 29 de agosto de 2024, de https://convertlive.com/es/u/convertir/litros/a/galones-los-eeuu-líquido
+
+* Comisión de Regulación de Energía y Gas (CREG). (n.d.). Precios de combustibles líquidos. Recuperado el 29 de agosto de 2024, de https://creg.gov.co/publicaciones/15565/precios-de-combustibles-liquidos/
+
+* Tusalario.org. (n.d.). Salario de vendedores de alimentos en la calle en Colombia. Recuperado el 29 de agosto de 2024, de https://tusalario.org/colombia/carrera/funcion-y-salario/vendedores-de-alimentos-en-la-calle#:~:text=Conozca%20su%20salario,de%20entre%20%24798.424%20y%20%241.191.
+
+* PyGAD. (n.d.). PyGAD: Python Genetic Algorithm and Genetic Programming library. Recuperado el 29 de agosto de 2024, de https://pygad.readthedocs.io/
+
+* Akavall. (n.d.). Ant Colony Optimization [Repositorio de código]. GitHub. Recuperado el 29 de agosto de 2024, de https://github.com/Akavall/AntColonyOptimization
