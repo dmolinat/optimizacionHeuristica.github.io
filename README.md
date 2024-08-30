@@ -589,10 +589,6 @@ x0=[2.72666176 1.19411277]
 iteracion 1000/10000
 X = [2.46016813 1.70132522], f = 1.2814849569343612
 
-
-iteracion 1000/10000
-X = [ 0.09264418 -1.07035843], f = 10.151353272133916
-
 ...
 
 iteracion 10000/10000
@@ -791,6 +787,16 @@ Además, la siguiente animación dada por **Figura 23** muestra el movimiento de
 
 
 ### 1.5. Conclusiones.
+
+1. El método de descenso por gradiente, dado los resultados obtenidos en cada uno de los 4 items de práctica, podemos observar que a mayor dimensionalidad, le cuesta más obtener dicho mínimo global, requiere un mayor número de iteraciones, y si se usan funciones con problemas en sus derividas o que tengan muchos mínimo locales, como en el caso de las funciones estudiadas en los items **1.3** y **1.4**, este convergerá prontamente y no al resultado esperado.
+
+2. Los algoritmos genéticos, al tener más posibilidades tanto de iteraciones como de solución por población suelen tener más coste computacional y en muchos casos, llega a converger a una solución local, esto ocurrió cuando se trabajaron las funciones aplicadas en 3 dimensiones. Sin embargo, la solución que suele dar es aproximadamente global y logra converger en alguna de sus generaciones.
+
+3. Con el learning rate adecuado, el método de descenso por gradiente termina convergiendo así la función no sea suave o convexa, lo que le da cierta flexibilidad. Sin embargo, para problemas donde la condición incial es aleatoria, no se garantiza que converge al mínimo global, esto ocurrió en la apliación mostrada en el item **1.4.1.1.**.
+
+4. A pesar de que requiere una mayor configuración y previo estudio, el método de algoritmos genéticos tiene mayor oportunidad para problemas de optimización, ya que con la recombinación, se puede obtener mayores combinaciones por población que logren llegar al resultado de la función objetivo deseado.
+
+5. En general, los mejores resultados, con menos corridas, iteraciones, aunque con más costo computacional se obtuvieron con los algoritmos genéticos. Sin embargo, desde el punto de vista de la configuración e implementación, el método de descenso de gradiente muestra ser más facil de implementar asegura la convergencia a una solución (no oscila, como en el caso de algoritmos genéticos) aunque esta no sea global.
 
 
 ## Referencias.
